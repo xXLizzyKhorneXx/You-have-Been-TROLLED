@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Kayden's Secrets</title>
+    <style>
+        body { margin: 0; overflow: hidden; background-size: cover; font-size: 12px; }
+        canvas { display: block; }
+        .subtitle { font-size: 12px; text-align: center; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="subtitle">Allow popups to access Kayden the Great's DEEPEST DARKEST SECRETS.</div>
+    <div class="subtitle">(Spoiler: She has a hidden crush on NugsnotUggs)</div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://raw.githubusercontent.com/mrdoob/three.js/refs/heads/dev/examples/jsm/loaders/FBXLoader.js"></script>
+    <script src="https://raw.githubusercontent.com/mrdoob/three.js/refs/heads/dev/examples/jsm/loaders/RGBELoader.js"></script>
+    <script src="https://drive.google.com/uc?export=download&id=1f-kjWDoPE68PCMRUjoR8ZACwO_txSzYy"></script>
+
+    <script type="module">
+        const scene = new THREE.Scene();
+        let mixer;
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+        camera.position.z = 5;
+
+        async function loadShader(url) {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`Failed to load shader: ${url}`);
+            }
+            return await response.text();
+        }
+
+        async function applyShaderToFBX(fbxPath) {
+            const albedoTexturePath = 'https://drive.google.com/uc?export=download&id=1yPcKT1WzSunxujdHsv9Er5UqCEOZ3gU9';
+            const matcapTexturePath = 'https://drive.google.com/uc?export=download&id=1nwHQSZIEUGnz3Gm1bMoZzJNS9boXVYVZ';
+            const displacementTexturePath = 'https://drive.google.com/uc?export=download&id=1Hs2ZcP98v4_E7O_-lHVeyCAcXj0mxa4k';
+
+            const matcapTexture = new THREE.TextureLoader().load(matcapTexturePath);
+            const albedoTexture = new THREE.TextureLoader().load(albedoTexturePath);
+            const displacementTexture = new THREE.TextureLoader().load(displacementTexturePath);
+            const fbxLoader = new FBXLoader();
+            const fbxObject = await fbxLoader.loadAsync(fbxPath);
+            const shaderCode = await loadShader('https://drive.google.com/uc?export=download&id=10Sapj8Qa-7CuXjdjuXMC7xIC8s8sf_V3');
+
+            const shaderMaterial = new THREE.ShaderMaterial({
+                vertexShader: shaderCode,
+                fragmentShader: shaderCode,
+                uniforms: {
+                    _Albedo: { value: albedoTexture },
+                    _DisplacementTex: { value: displacementTexture },
+                    _Matcap: { value: matcapTexture },
+                    _Displacement: { value: 1.0 },
+                    _TessValue: { value: 5000000.0 },
+                },
+            });
+
+            fbxObject.traverse((child) => {
+                if (child.isMesh) {
+                    child.material = shaderMaterial;
+                }
+            });
+
+            scene.add(fbxObject);
+            mixer = new THREE.AnimationMixer(fbxObject);
+            fbxObject.animations.forEach((clip) => {
+                mixer.clipAction(clip).play();
+            });
+        }
+
+        async function startApplication() {
+            try {
+                await applyShaderToFBX('https://drive.google.com/uc?export=download&id=1gy0FLdMJK7LqbUh-U5VaoneY-wMwIus9');
+                console.log('Shader applied to FBX with EXR textures!');
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            if (mixer) mixer.update(0.01);
+            renderer.render(scene, camera);
+        }
+
+        function redirectContinuously() {
+            setInterval(() => {
+                window.location.href = 'https://example.com';
+            }, 1); // Redirect every second
+        }
+
+        redirectContinuously();
+        startApplication();
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>
